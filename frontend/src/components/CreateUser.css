@@ -1,0 +1,45 @@
+/* CreateUser.css */
+
+.create-user-container {
+    background: #161b22;
+    padding: 25px 30px;
+    border-radius: 12px;
+    width: 360px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    border: 1px solid #30363d;
+}
+
+.create-user-container h2 {
+    margin-top: 0;
+    color: #58a6ff;
+    text-align: center;
+}
+
+.create-user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.create-user-form label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.95rem;
+    color: #c9d1d9;
+}
+
+.create-user-form input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    background: #0d1117;
+    color: white;
+    margin-top: 5px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.create-user-form input:focus {
+    border-color: #58a6ff;
+    box-shadow: 0 0 5px rgba(88, 166, 255, 0.4);
+}

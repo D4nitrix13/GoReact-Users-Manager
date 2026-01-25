@@ -1,0 +1,22 @@
+/* button.css */
+
+.button {
+    padding: 12px 15px;
+    background-color: #238636;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+}
+
+.button:hover {
+    background-color: #2ea043;
+}
+
+.button:active {
+    background-color: #196c2e;
+}

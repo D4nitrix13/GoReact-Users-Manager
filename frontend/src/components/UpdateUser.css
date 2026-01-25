@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    background: #f4f6fb;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal centrado */
+.update-user-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 40px;
+}
+
+/* Card del formulario */
+.update-user-form {
+    background: #ffffff;
+    width: 420px;
+    padding: 30px 30px 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.35s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Título */
+.update-user-form h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #333;
+}
+
+/* Label + input en columna para diseño moderno */
+.update-user-form label {
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #444;
+    display: block;
+}
+
+/* Input moderno */
+.update-user-form input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: #fafafa;
+    font-size: 15px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Efecto focus */
+.update-user-form input:focus {
+    border-color: #4a7df0;
+    box-shadow: 0 0 0 3px rgba(74, 125, 240, 0.25);
+    outline: none;
+    background: #ffffff;
+}
+
+/* Animación suave */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsivo */
+@media (max-width: 520px) {
+    .update-user-form {
+        width: 90%;
+        padding: 25px;
+    }
+}

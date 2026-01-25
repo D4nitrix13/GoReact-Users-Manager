@@ -1,0 +1,8 @@
+# Ignore everything
+*
+
+# But not these files
+!src/
+!public/
+!package.json
+!package-lock.json
