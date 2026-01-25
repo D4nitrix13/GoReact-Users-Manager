@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  # 172.18.0.2
+  db:
+    container_name: database
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: user_db
+    ports:
+      - "5432:5432/tcp"
+  # 172.18.0.3
+  backend:
+    container_name: backend
+    image: D4nitrix13/goolang-app:latest
+    build: ./
+    environment:
+      DATABASE_URL: "host=database user=postgres password=root dbname=user_db sslmode=disable"
+    ports:
+      - "8000:8000/tcp"
+    depends_on:
+      - db
+  # 172.18.0.3
+  fronted:
+    container_name: frontend
+    image: D4nitrix13/goolang-frontend:latest
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000/tcp"
+    depends_on:
+      - backend
