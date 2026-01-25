@@ -1,0 +1,8 @@
+# Ignore everything
+*
+
+# But not these files
+!main.go
+!go.mod
+!go.sum
+!initialization_script.sh
