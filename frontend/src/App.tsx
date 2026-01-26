@@ -10,9 +10,10 @@ import {
   useNavigate,
 } from "react-router-dom";
 import "./App.css";
-import CreateUser from "./components/CreateUser";
-import UpdateUser from "./components/UpdateUser";
-import Users from "./components/Users";
+import CreateUser from "./components/CreateUser.tsx";
+import UpdateUser from "./components/UpdateUser.tsx";
+import Users from "./components/Users.tsx";
+
 
 interface NavigationState {
   notification?: string;

@@ -22,7 +22,7 @@ services:
       - "8000:8000/tcp"
     depends_on:
       - db
-  # 172.18.0.3
+  # 172.18.0.4
   fronted:
     container_name: frontend
     image: D4nitrix13/goolang-frontend:latest
