@@ -1,28 +1,37 @@
-// src/components/CreateUser.js
+// src/components/CreateUser.tsx
 
-import axios from 'axios';
-import { useState } from 'react';
+import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './CreateUser.css';
-import './button.css';
+import "./CreateUser.css";
+import "./button.css";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL: string =
+    process.env.REACT_APP_API_BASE_URL ?? "http://localhost:8000";
 
-const CreateUser = ({ onUserCreated }) => {
-    const [newUser, setNewUser] = useState({ name: '', email: '' });
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState(null);
-    const [error, setError] = useState(null);
+type NewUser = {
+    name: string;
+    email: string;
+};
 
-    const navigate = useNavigate(); // Hook for navigation
+interface CreateUserProps {
+    onUserCreated?: () => void;
+}
 
-    const validateEmail = (email) => {
-        // Simple email validation
+const CreateUser: React.FC<CreateUserProps> = ({ onUserCreated }) => {
+    const [newUser, setNewUser] = useState < NewUser > ({ name: "", email: "" });
+    const [loading, setLoading] = useState < boolean > (false);
+    const [message, setMessage] = useState < string | null > (null);
+    const [error, setError] = useState < string | null > (null);
+
+    const navigate = useNavigate();
+
+    const validateEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
 
-    const handleCreateUser = () => {
+    const handleCreateUser = (): void => {
         if (loading) return;
 
         setMessage(null);
@@ -31,13 +40,13 @@ const CreateUser = ({ onUserCreated }) => {
         const trimmedName = newUser.name.trim();
         const trimmedEmail = newUser.email.trim();
 
-        if (trimmedName === '' || trimmedEmail === '') {
-            setError('Please enter both name and email before creating a user.');
+        if (trimmedName === "" || trimmedEmail === "") {
+            setError("Please enter both name and email before creating a user.");
             return;
         }
 
         if (!validateEmail(trimmedEmail)) {
-            setError('Please enter a valid email address.');
+            setError("Please enter a valid email address.");
             return;
         }
 
@@ -46,24 +55,23 @@ const CreateUser = ({ onUserCreated }) => {
         axios
             .post(`${API_BASE_URL}/users`, { name: trimmedName, email: trimmedEmail })
             .then((response) => {
-                console.log('User created successfully:', response.data);
+                console.log("User created successfully:", response.data);
 
                 if (onUserCreated) {
                     onUserCreated();
                 }
 
-                // Redirect to root (home) with a notification message
                 navigate("/", {
                     state: {
                         notification: "User created successfully!",
-                        notificationType: "success", // you can use "error", "info", etc. in the future
+                        notificationType: "success",
                     },
-                    replace: true, // avoid keeping /create-user in history stack
+                    replace: true,
                 });
             })
             .catch((err) => {
-                console.error('Error creating user:', err);
-                setError('Error creating user. Please try again.');
+                console.error("Error creating user:", err);
+                setError("Error creating user. Please try again.");
             })
             .finally(() => {
                 setLoading(false);
@@ -103,10 +111,10 @@ const CreateUser = ({ onUserCreated }) => {
                 <button
                     onClick={handleCreateUser}
                     className="button"
-                    style={{ fontFamily: 'Poppins' }}
+                    style={{ fontFamily: "Poppins" }}
                     disabled={loading}
                 >
-                    {loading ? 'Creating...' : 'Create User'}
+                    {loading ? "Creating..." : "Create User"}
                 </button>
             </div>
         </div>

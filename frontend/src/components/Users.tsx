@@ -5,22 +5,28 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./User.css";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+const API_BASE_URL: string =
+    process.env.REACT_APP_API_BASE_URL ?? "http://localhost:8000";
+
+type User = {
+    id: number;
+    name: string;
+    email: string;
+};
 
 const Users = () => {
     const navigate = useNavigate();
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [search, setSearch] = useState("");
+    const [users, setUsers] = useState < User[] > ([]);
+    const [loading, setLoading] = useState < boolean > (false);
+    const [error, setError] = useState < string | null > (null);
+    const [search, setSearch] = useState < string > ("");
 
-    // Fetch users
-    const fetchUsers = async () => {
+    const fetchUsers = async (): Promise<void> => {
         setLoading(true);
         setError(null);
 
         try {
-            const response = await axios.get(`${API_BASE_URL}/users`);
+            const response = await axios.get < User[] > (`${API_BASE_URL}/users`);
             setUsers(response.data || []);
         } catch (err) {
             console.error("Error fetching users:", err);
@@ -34,17 +40,14 @@ const Users = () => {
         fetchUsers();
     }, []);
 
-    // Delete user
-    const handleDelete = async (id) => {
+    const handleDelete = async (id: number): Promise<void> => {
         if (!window.confirm("Do you really want to delete this user?")) return;
 
         try {
             await axios.delete(`${API_BASE_URL}/users/${id}`);
 
-            // Refresh list
             await fetchUsers();
 
-            // Notify at root
             navigate("/", {
                 state: {
                     notification: "User deleted successfully!",

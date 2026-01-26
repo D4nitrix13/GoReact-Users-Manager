@@ -1,45 +1,60 @@
 // src/components/UpdateUser.js
 
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import './CreateUser.css';
-import './button.css';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import "./CreateUser.css";
+import "./button.css";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL: string =
+    process.env["REACT_APP_API_BASE_URL"] ?? "http://localhost:8000";
+
+type EditableUser = {
+    name: string;
+    email: string;
+};
 
 const UpdateUser = () => {
-    const { id } = useParams();
+    const { id } = useParams < { id: string } > ();
     const navigate = useNavigate();
 
-    const [user, setUser] = useState({ name: '', email: '' });
+    const [user, setUser] = useState < EditableUser > ({ name: "", email: "" });
     const [loading, setLoading] = useState(false);
     const [loadingUser, setLoadingUser] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState < string | null > (null);
 
-    // Simple email validation (same logic as in CreateUser)
-    const validateEmail = (email) => {
+    const validateEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
 
-    // Fetch user data on mount
     useEffect(() => {
+        if (!id) {
+            navigate("/", {
+                state: {
+                    notification: "Invalid user id.",
+                    notificationType: "error",
+                },
+                replace: true,
+            });
+            return;
+        }
+
         axios
             .get(`${API_BASE_URL}/users/${id}`)
             .then((res) => {
                 setUser({
-                    name: res.data.name || '',
-                    email: res.data.email || '',
+                    name: res.data.name ?? "",
+                    email: res.data.email ?? "",
                 });
                 setError(null);
             })
-            .catch((err) => {
-                console.error('Error fetching user:', err);
-                navigate('/', {
+            .catch((err: unknown) => {
+                console.error("Error fetching user:", err);
+                navigate("/", {
                     state: {
-                        notification: 'User not found.',
-                        notificationType: 'error',
+                        notification: "User not found.",
+                        notificationType: "error",
                     },
                     replace: true,
                 });
@@ -47,21 +62,21 @@ const UpdateUser = () => {
             .finally(() => setLoadingUser(false));
     }, [id, navigate]);
 
-    const handleUpdate = () => {
-        if (loading) return;
+    const handleUpdate = (): void => {
+        if (loading || !id) return;
 
         setError(null);
 
         const trimmedName = user.name.trim();
         const trimmedEmail = user.email.trim();
 
-        if (trimmedName === '' || trimmedEmail === '') {
-            setError('Please enter both name and email before updating the user.');
+        if (trimmedName === "" || trimmedEmail === "") {
+            setError("Please enter both name and email before updating the user.");
             return;
         }
 
         if (!validateEmail(trimmedEmail)) {
-            setError('Please enter a valid email address.');
+            setError("Please enter a valid email address.");
             return;
         }
 
@@ -73,21 +88,25 @@ const UpdateUser = () => {
                 email: trimmedEmail,
             })
             .then(() => {
-                navigate('/', {
+                navigate("/", {
                     state: {
-                        notification: 'User updated successfully!',
-                        notificationType: 'success',
+                        notification: "User updated successfully!",
+                        notificationType: "success",
                     },
                     replace: true,
                 });
             })
-            .catch((err) => {
-                console.error('Error updating user:', err);
+            .catch((err: unknown) => {
+                console.error("Error updating user:", err);
 
-                let message = 'Error updating user. Please try again.';
+                let message = "Error updating user. Please try again.";
 
-                if (err.response && err.response.data && err.response.data.error) {
-                    message = err.response.data.error;
+                if (
+                    axios.isAxiosError(err) &&
+                    err.response?.data &&
+                    (err.response.data as any).error
+                ) {
+                    message = (err.response.data as any).error;
                 }
 
                 setError(message);
@@ -135,11 +154,11 @@ const UpdateUser = () => {
 
                 <button
                     className="button"
-                    style={{ fontFamily: 'Poppins' }}
+                    style={{ fontFamily: "Poppins" }}
                     onClick={handleUpdate}
                     disabled={loading}
                 >
-                    {loading ? 'Updating...' : 'Update User'}
+                    {loading ? "Updating..." : "Update User"}
                 </button>
             </div>
         </div>

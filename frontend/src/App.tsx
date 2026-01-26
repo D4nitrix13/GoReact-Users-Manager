@@ -1,4 +1,4 @@
-// src/App.js
+// frontend/src/App.tsx
 
 import { useEffect, useState } from "react";
 import {
@@ -14,25 +14,29 @@ import CreateUser from "./components/CreateUser";
 import UpdateUser from "./components/UpdateUser";
 import Users from "./components/Users";
 
-// Small component to show notifications at the root
+interface NavigationState {
+  notification?: string;
+  notificationType?: "success" | "error" | "info" | "warning";
+}
+
 function NotificationBar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [notification, setNotification] = useState(null);
-  const [type, setType] = useState("success");
+
+  const [notification, setNotification] = useState<string | null>(null);
+  const [type, setType] = useState<"success" | "error" | "info" | "warning">(
+    "success"
+  );
 
   useEffect(() => {
-    // Read notification from navigation state (if any)
-    const state = location.state;
+    const state = location.state as NavigationState | null;
 
-    if (state && state.notification) {
+    if (state?.notification) {
       setNotification(state.notification);
       setType(state.notificationType || "success");
 
-      // Clean state so refresh doesn't show it again
       navigate(location.pathname, { replace: true, state: {} });
 
-      // Auto-hide after 3 seconds
       const timer = setTimeout(() => setNotification(null), 3000);
       return () => clearTimeout(timer);
     }
@@ -52,7 +56,9 @@ function Home() {
     <>
       <header className="App-header">
         <h1 className="App-title">Go API Frontend</h1>
-        <p className="App-subtitle">Simple CRUD with Go + PostgreSQL + React</p>
+        <p className="App-subtitle">
+          Simple CRUD with Go + PostgreSQL + React
+        </p>
       </header>
 
       <div className="content">
@@ -66,7 +72,6 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {/* Navbar */}
         <nav className="navbar">
           <div className="navbar-logo">Go API</div>
 
@@ -80,13 +85,10 @@ function App() {
           </ul>
         </nav>
 
-        {/* Global notification bar */}
         <NotificationBar />
 
-        {/* Routes */}
         <Routes>
           <Route path="/" element={<Home />} />
-
           <Route
             path="/create-user"
             element={
@@ -95,7 +97,6 @@ function App() {
               </div>
             }
           />
-
           <Route
             path="/edit-user/:id"
             element={
@@ -104,7 +105,6 @@ function App() {
               </div>
             }
           />
-
         </Routes>
       </div>
     </Router>
