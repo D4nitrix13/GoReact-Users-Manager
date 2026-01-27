@@ -1,4 +1,4 @@
-// src/components/CreateUser.tsx
+// frontend/src/components/CreateUser.tsx
 
 import axios from "axios";
 import { useState } from "react";
