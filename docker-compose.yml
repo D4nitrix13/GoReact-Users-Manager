@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: user_db
     ports:
-      - "5432:5432/tcp"
+      - "6789:5432/tcp"
     expose:
       - 5432/tcp
   # 172.18.0.3

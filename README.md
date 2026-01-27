@@ -69,7 +69,7 @@ La API utiliza la siguiente variable de entorno:
 Ejemplo para desarrollo:
 
 ```bash
-export DATABASE_URL="postgres://user:password@host:5432/dbname?sslmode=disable"
+export DATABASE_URL="postgres://postgres:root@db:5432/user_db?sslmode=disable"
 ```
 
 En Docker Compose normalmente esta variable se configura en el servicio del backend.

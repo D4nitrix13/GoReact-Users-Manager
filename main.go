@@ -32,7 +32,8 @@ func main() {
 	}
 
 	// Connect to PostgreSQL using the DATABASE_URL environment variable
-	// Example: postgres://user:password@localhost:5432/dbname?sslmode=disable
+	// Example: postgres://postgres:root@db:5432/user_db?sslmode=disable
+
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal("Error opening database connection:", err)
