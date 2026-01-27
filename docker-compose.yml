@@ -11,6 +11,8 @@ services:
       POSTGRES_DB: user_db
     ports:
       - "5432:5432/tcp"
+    expose:
+      - 5432/tcp
   # 172.18.0.3
   backend:
     container_name: backend
@@ -20,6 +22,8 @@ services:
       DATABASE_URL: "host=database user=postgres password=root dbname=user_db sslmode=disable"
     ports:
       - "8000:8000/tcp"
+    expose:
+      - 8000/tcp
     depends_on:
       - db
   # 172.18.0.4
@@ -29,6 +33,8 @@ services:
     build:
       context: ./frontend
     ports:
-      - "3000:3000/tcp"
+      - "3000:4000/tcp"
+    expose:
+      - 4000/tcp
     depends_on:
       - backend

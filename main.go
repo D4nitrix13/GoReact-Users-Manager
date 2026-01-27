@@ -7,7 +7,8 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"strings" // Needed for strings.TrimSpace
+	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
@@ -20,10 +21,19 @@ type User struct {
 	Email string `json:"email"`
 }
 
+// Simple email validation regex (not perfect but solid)
+var emailRegex = regexp.MustCompile(`^[^\s@]+@[^\s@]+\.[^\s@]+$`)
+
 func main() {
+	// Read DATABASE_URL from environment variables
+	dsn := os.Getenv("DATABASE_URL")
+	if strings.TrimSpace(dsn) == "" {
+		log.Fatal("DATABASE_URL environment variable is not set or is empty")
+	}
+
 	// Connect to PostgreSQL using the DATABASE_URL environment variable
 	// Example: postgres://user:password@localhost:5432/dbname?sslmode=disable
-	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal("Error opening database connection:", err)
 	}
@@ -38,8 +48,8 @@ func main() {
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS users (
 			id SERIAL PRIMARY KEY,
-			name TEXT,
-			email TEXT
+			name TEXT NOT NULL,
+			email TEXT NOT NULL
 		)
 	`)
 	if err != nil {
@@ -99,6 +109,11 @@ func jsonContentTypeMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+// isValidEmail validates the email string against the regex
+func isValidEmail(email string) bool {
+	return emailRegex.MatchString(email)
+}
+
 // getUsers returns all users from the database
 func getUsers(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -139,10 +154,17 @@ func getUser(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Get the "id" URL parameter
 		vars := mux.Vars(r)
-		id := vars["id"]
+		idStr := vars["id"]
+
+		id, err := strconv.Atoi(idStr)
+		if err != nil || id <= 0 {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"error": "Invalid user ID"})
+			return
+		}
 
 		var u User
-		err := db.QueryRow("SELECT id, name, email FROM users WHERE id = $1", id).
+		err = db.QueryRow("SELECT id, name, email FROM users WHERE id = $1", id).
 			Scan(&u.ID, &u.Name, &u.Email)
 
 		if err != nil {
@@ -162,14 +184,6 @@ func getUser(db *sql.DB) http.HandlerFunc {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(u)
 	}
-}
-
-// Simple email validation regex (not perfect but solid)
-var emailRegex = regexp.MustCompile(`^[^\s@]+@[^\s@]+\.[^\s@]+$`)
-
-// isValidEmail validates the email string against the regex
-func isValidEmail(email string) bool {
-	return emailRegex.MatchString(email)
 }
 
 // createUser inserts a new user into the database
@@ -244,7 +258,14 @@ func updateUser(db *sql.DB) http.HandlerFunc {
 		}
 
 		vars := mux.Vars(r)
-		id := vars["id"]
+		idStr := vars["id"]
+
+		id, err := strconv.Atoi(idStr)
+		if err != nil || id <= 0 {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"error": "Invalid user ID"})
+			return
+		}
 
 		// Execute the update statement
 		result, err := db.Exec(
@@ -282,11 +303,18 @@ func updateUser(db *sql.DB) http.HandlerFunc {
 func deleteUser(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-		id := vars["id"]
+		idStr := vars["id"]
+
+		id, err := strconv.Atoi(idStr)
+		if err != nil || id <= 0 {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"error": "Invalid user ID"})
+			return
+		}
 
 		// First, check if the user exists
 		var u User
-		err := db.QueryRow("SELECT id, name, email FROM users WHERE id = $1", id).
+		err = db.QueryRow("SELECT id, name, email FROM users WHERE id = $1", id).
 			Scan(&u.ID, &u.Name, &u.Email)
 
 		if err != nil {

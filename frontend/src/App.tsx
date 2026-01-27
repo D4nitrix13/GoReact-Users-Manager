@@ -38,7 +38,7 @@ function NotificationBar() {
 
       navigate(location.pathname, { replace: true, state: {} });
 
-      const timer = setTimeout(() => setNotification(null), 3000);
+      const timer = setTimeout(() => setNotification(null), 4000);
       return () => clearTimeout(timer);
     }
   }, [location, navigate]);

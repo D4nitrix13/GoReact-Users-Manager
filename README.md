@@ -81,7 +81,13 @@ En Docker Compose normalmente esta variable se configura en el servicio del back
 Desde la raíz del proyecto (donde está `docker-compose.yml`):
 
 ```bash
-docker-compose up --build
+docker-compose --project-name goreact-users-manager --project-directory . up --build -d
+```
+
+Para detener los servicios:
+
+```bash
+docker-compose --project-name goreact-users-manager --project-directory . down --remove-orphans
 ```
 
 El servicio del backend suele exponerse en:
@@ -89,8 +95,6 @@ El servicio del backend suele exponerse en:
 ```bash
 http://localhost:8000
 ```
-
-Revisa tu `docker-compose.yml` para ver el nombre del servicio, por ejemplo `go-app` o similar.
 
 ---
 
@@ -336,7 +340,7 @@ Actualmente el backend implementa:
 
 ## CORS
 
-La API viene configurada con CORS para que el frontend en React pueda consumirla desde otro origen (`localhost:3000`, `localhost:3001`, etc.).
+La API viene configurada con CORS para que el frontend en React pueda consumirla desde otro origen (`localhost:4000`, `localhost:3001`, etc.).
 
 En desarrollo se permite cualquier origen:
 

@@ -1,17 +1,21 @@
-# use official Node.js image
+# Use an official Node.js base image
 FROM node:16-alpine3.13
 
-# Set Working Directory
+# Set the working directory inside the container
 WORKDIR /frontend
 
-# Copy The Source Code
+# Copy the entire project into the container
 COPY ./ ./
 
-# Download And Install The Dependencies
+# Install all project dependencies
 RUN /usr/local/bin/npm install
 
-# EXPOSE The Port
-EXPOSE 3000/tcp
+# Set the internal port React should listen on
+ENV PORT=4000
+ENV HOST=0.0.0.0
 
-# Run The Executable
+# Expose the port used by the app inside the container
+EXPOSE 4000/tcp
+
+# Start the React development server
 CMD [ "/usr/local/bin/npm", "start" ]
