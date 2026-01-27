@@ -1,13 +1,13 @@
-// src/components/Users.tsx
+// frontend/src/components/Users.tsx
 
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./User.css";
 
-const API_URL =
-  process.env.REACT_APP_API_URL ||
-  `${window.location.protocol}//${window.location.hostname}:8000`;
+import { API_URL } from "../config/api";
+import "./User.css";
+
 
 type User = {
   id: number;

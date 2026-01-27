@@ -27,7 +27,7 @@ services:
     depends_on:
       - db
   # 172.18.0.4
-  fronted:
+  frontend:
     container_name: frontend
     image: D4nitrix13/goolang-frontend:latest
     build:
