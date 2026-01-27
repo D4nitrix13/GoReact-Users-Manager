@@ -5,16 +5,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./User.css";
 
-import { API_URL } from "../config/api";
-
-import "./User.css";
-
+const API_URL: string =
+  process.env.REACT_APP_API_URL ||
+  `${window.location.protocol}//${window.location.hostname}:8000`;
 
 type User = {
   id: number;
   name: string;
   email: string;
 };
+
 
 const Users = () => {
   const navigate = useNavigate();
